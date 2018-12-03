@@ -65,6 +65,22 @@
     ```
 1. start server.  
 there are some url for you to test. localhost:8080/test/user,localhost:8080/test/admin and localhost:8080/test/noCheck,if you are not login or don't have permission,you will get some hint.
+##### note  
+if you login failed,server will response 302 and redirect to login page but 401,it's not cool,because in your front code may can't filter 302,so you may want get 401,it's ok,just follow these steps:
+1. add dependency
+    ```
+    compile "org.grails.plugins:spring-security-rest:2.0.0.RC1"
+    ```
+1. add jwt secret(more than 256 bits) in application.groovy  
+    grails.plugin.springsecurity.rest.token.storage.jwt.secret="xxxx"
+1. login  
+    ```
+    curl -v -H "Content-Type: application/json" -d '{"username":"admin","password":"admin"}' http://localhost:8080/api/login
+    ```    
+    you will get a jwt token,it's key is "access_token"
+1. send request with jwt token   
+      curl -v -H "Authorization:Bearer=token value" http://localhost:8080/api/getMyInfo
+
 ##### if you want to use gorm，continue follow steps.    
 1. add gradle dependency
      ```    
